@@ -771,3 +771,36 @@ class Utility:
         with Path(destination).open("wb") as buffer:
             shutil.copyfileobj(doc.file, buffer)
         return destination
+
+    @staticmethod
+    def execute_http_request(http_url: str, request_method: str, request_body=None,
+                             raise_exp_on_err: bool = True, auth_token=None):
+        """
+        Executes http urls provided.
+
+        :param http_url: HTTP url to be executed
+        :param request_method: One of GET, PUT, POST, DELETE
+        :param request_body: Request body to be sent with the request
+        :param raise_exp_on_err: Exception will be raised if True. Default value is True.
+        :param auth_token: auth token to be sent with request in case of token based authentication
+        :return: JSON/string response
+        """
+        response = ""
+        header = {'Authorization': auth_token}
+        try:
+            if request_method.upper() == 'GET':
+                response = requests.get(http_url, json=request_body, headers=header)
+            elif request_method.upper() == 'POST':
+                response = requests.post(http_url, json=request_body, headers=header)
+            elif request_method.upper() == 'PUT':
+                response = requests.put(http_url, json=request_body, headers=header)
+            elif request_method.upper() == 'DELETE':
+                response = requests.delete(http_url, json=request_body, headers=header)
+        except Exception as e:
+            raise AppException("Failed to execute the url: " + str(e))
+
+        http_response_as_json = response.json()
+        if raise_exp_on_err and http_response_as_json['error_code'] != 0:
+            raise AppException(http_response_as_json['message'])
+
+        return http_response_as_json

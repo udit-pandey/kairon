@@ -1,0 +1,5 @@
+tracker_endpoint:
+  url: ${TRACKER_URL:"mongodb://localhost:27017"}
+  db: ${TRACKER_DB:"rasa"}
+  collection: ${TRACKER_COLLECTION:"conversations"}
+  token: ${TOKEN}

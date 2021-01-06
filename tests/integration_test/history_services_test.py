@@ -9,18 +9,22 @@ from kairon.api.app.main import app
 from kairon.api.processor import AccountProcessor
 from kairon.data_processor.history import ChatHistory
 from kairon.data_processor.processor import MongoProcessor
+from kairon.history_server.history import HistoryServer, HistoryServerUtils
 from kairon.utils import Utility
 from mongomock import MongoClient
+
 client = TestClient(app)
+
 
 def pytest_configure():
     return {'token_type': None,
             'access_token': None
             }
 
+
 @pytest.fixture(autouse=True)
 def setup():
-    os.environ["system_file"] = "./tests/testing_data/system.yaml"
+    os.environ["system_file"] = "tests/testing_data/system.yaml"
     Utility.load_evironment()
     connect(host=Utility.environment['database']["url"])
 
@@ -44,52 +48,54 @@ def mock_auth(monkeypatch):
 
 
 def endpoint_details(*args, **kwargs):
-    return {"tracker_endpoint": {"url": "mongodb://demo", "db": "conversation"}}
+    return {"tracker_endpoint": {"url": "mongodb://demo", "type": "mongo", "db": "conversation"}}
 
 
 @pytest.fixture
 def mock_mongo_processor(monkeypatch):
     monkeypatch.setattr(MongoProcessor, "get_endpoints", endpoint_details)
 
+
 @pytest.fixture
 def mock_db_client(monkeypatch):
     def db_client(*args, **kwargs):
-        return MongoClient(), "conversation", "conversations", None
-    monkeypatch.setattr(ChatHistory, "get_mongo_connection", db_client)
+        return MongoClient(), "conversation", "conversations"
+
+    monkeypatch.setattr(HistoryServerUtils, "get_mongo_connection", db_client)
 
 
 def history_users(*args, **kwargs):
     return [
-        "5b029887-bed2-4bbb-aa25-bd12fda26244",
-        "b868d6ee-f98f-4c1b-b284-ce034aaad01f",
-        "b868d6ee-f98f-4c1b-b284-ce034aaad61f",
-        "b868d6ee-f98f-4c1b-b284-ce4534aaad61f",
-        "49931985-2b51-4db3-89d5-a50767e6d98e",
-        "2e409e7c-06f8-4de8-8c88-93b4cf0b7211",
-        "2fed7769-b647-4088-8ed9-a4f4f3653f25",
-    ], None
+               "5b029887-bed2-4bbb-aa25-bd12fda26244",
+               "b868d6ee-f98f-4c1b-b284-ce034aaad01f",
+               "b868d6ee-f98f-4c1b-b284-ce034aaad61f",
+               "b868d6ee-f98f-4c1b-b284-ce4534aaad61f",
+               "49931985-2b51-4db3-89d5-a50767e6d98e",
+               "2e409e7c-06f8-4de8-8c88-93b4cf0b7211",
+               "2fed7769-b647-4088-8ed9-a4f4f3653f25",
+           ]
 
 
 def user_history(*args, **kwargs):
     json_data = json.load(open("tests/testing_data/history/conversation.json"))
-    return (
-        json_data['events'],
-        None
-    )
+    return json_data[0]['events']
 
 
 def history_conversations(*args, **kwargs):
     json_data = json.load(open("tests/testing_data/history/conversations_history.json"))
-    return json_data, None
+    return json_data
+
+
+@pytest.fixture
+def mock_endpoint(monkeypatch):
+    monkeypatch.setattr(ChatHistory, "get_tracker_endpoint", endpoint_details)
 
 
 @pytest.fixture
 def mock_chat_history(monkeypatch):
-    monkeypatch.setattr(ChatHistory, "fetch_user_history", user_history)
-    monkeypatch.setattr(ChatHistory, "get_conversations", history_conversations)
-    monkeypatch.setattr(ChatHistory, "fetch_chat_users", history_users)
-
-
+    monkeypatch.setattr(HistoryServer, "fetch_user_history", user_history)
+    monkeypatch.setattr(HistoryServer, "get_conversations", history_conversations)
+    monkeypatch.setattr(HistoryServer, "fetch_chat_users", history_users)
 
 
 def test_chat_history_users_connection_error(mock_auth, mock_mongo_processor):
@@ -113,7 +119,7 @@ def test_chat_history_users_connection_error(mock_auth, mock_mongo_processor):
     assert not actual["success"]
 
 
-def test_chat_history_users(mock_auth, mock_chat_history):
+def test_chat_history_users(mock_auth, mock_chat_history, mock_mongo_processor):
     response = client.get(
         "/api/history/users",
         headers={"Authorization": pytest.token_type + " " + pytest.access_token},
@@ -126,7 +132,7 @@ def test_chat_history_users(mock_auth, mock_chat_history):
     assert actual["success"]
 
 
-def test_chat_history(mock_auth, mock_chat_history):
+def test_chat_history(mock_auth, mock_chat_history, mock_mongo_processor):
     response = client.get(
         "/api/history/users/5e564fbcdcf0d5fad89e3acd",
         headers={"Authorization": pytest.token_type + " " + pytest.access_token},
@@ -139,7 +145,7 @@ def test_chat_history(mock_auth, mock_chat_history):
     assert actual["success"]
 
 
-def test_visitor_hit_fallback(mock_auth, mock_db_client):
+def test_visitor_hit_fallback(mock_auth, mock_endpoint, mock_db_client):
     response = client.get(
         "/api/history/metrics/fallback",
         headers={"Authorization": pytest.token_type + " " + pytest.access_token},
@@ -153,7 +159,7 @@ def test_visitor_hit_fallback(mock_auth, mock_db_client):
     assert actual["success"]
 
 
-def test_conversation_steps(mock_auth, mock_db_client):
+def test_conversation_steps(mock_auth, mock_endpoint, mock_db_client):
     response = client.get(
         "/api/history/metrics/conversation/steps",
         headers={"Authorization": pytest.token_type + " " + pytest.access_token},
@@ -166,7 +172,7 @@ def test_conversation_steps(mock_auth, mock_db_client):
     assert actual["success"]
 
 
-def test_conversation_time(mock_auth, mock_db_client):
+def test_conversation_time(mock_auth, mock_endpoint, mock_db_client):
     response = client.get(
         "/api/history/metrics/conversation/time",
         headers={"Authorization": pytest.token_type + " " + pytest.access_token},
@@ -179,7 +185,7 @@ def test_conversation_time(mock_auth, mock_db_client):
     assert actual["success"]
 
 
-def test_user_with_metrics(mock_auth, mock_db_client):
+def test_user_with_metrics(mock_auth, mock_endpoint, mock_db_client):
     response = client.get(
         "/api/history/metrics/users",
         headers={"Authorization": pytest.token_type + " " + pytest.access_token},

@@ -8,14 +8,14 @@
     "events" : [
         {
             "event" : "action", 
-            "timestamp" : 1582714812.8352926, 
+            "timestamp" : 1582714812.8352926,
             "name" : "action_listen", 
             "policy" : null, 
             "confidence" : null
         }, 
         {
             "event" : "user", 
-            "timestamp" : 1582714812.9233751, 
+            "timestamp" : 1582714812.9233751,
             "text" : "Hi", 
             "parse_data" : {
                 "intent" : {
@@ -61,14 +61,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582714813.205575, 
+            "timestamp" : 1582714813.205575,
             "name" : "utter_greet", 
             "policy" : "policy_0_MemoizationPolicy", 
             "confidence" : 1.0
         }, 
         {
             "event" : "bot", 
-            "timestamp" : 1582714813.205575, 
+            "timestamp" : 1582714813.205575,
             "text" : "Hey! How are you?", 
             "data" : {
                 "elements" : null, 
@@ -84,14 +84,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582714813.214581, 
+            "timestamp" : 1582714813.214581,
             "name" : "action_listen", 
             "policy" : "policy_0_MemoizationPolicy", 
             "confidence" : 1.0
         }, 
         {
             "event" : "user", 
-            "timestamp" : 1582714865.957085, 
+            "timestamp" : 1582714865.957085,
             "text" : "where is digite located", 
             "parse_data" : {
                 "intent" : {
@@ -137,20 +137,20 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582714865.9691007, 
+            "timestamp" : 1582714865.9691007,
             "name" : "action_listen", 
             "policy" : "policy_1_KerasPolicy", 
             "confidence" : 0.3068053424358368
         }, 
         {
             "event" : "user", 
-            "timestamp" : 1582714997.052953, 
+            "timestamp" : 1582714997.052953,
             "text" : "where is digite located", 
             "parse_data" : {
                 "intent" : {
                     "name" : "location_query", 
                     "confidence" : 0.9906349778175354
-                }, 
+                },
                 "entities" : [
 
                 ], 
@@ -206,14 +206,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582714997.5523076, 
+            "timestamp" : 1582714997.5523076,
             "name" : "action_default_fallback", 
             "policy" : "policy_3_FallbackPolicy", 
             "confidence" : 1.0
         }, 
         {
             "event" : "bot", 
-            "timestamp" : 1582714997.5523076, 
+            "timestamp" : 1582714997.5523076,
             "text" : "Forgive me. I could not process your message. I'm the new bot here, so I've got a long way to go. You can send in your queries to sales@digite.com or fill out the form here: \n https://www.digite.com/contact-us/", 
             "data" : {
                 "elements" : null, 
@@ -233,14 +233,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582714997.5763245, 
+            "timestamp" : 1582714997.5763245,
             "name" : "action_default_fallback", 
             "policy" : "policy_3_FallbackPolicy", 
             "confidence" : 1.0
         }, 
         {
             "event" : "bot", 
-            "timestamp" : 1582714997.5763245, 
+            "timestamp" : 1582714997.5763245,
             "text" : "Forgive me. I could not process your message. I'm the new bot here, so I've got a long way to go. You can send in your queries to sales@digite.com or fill out the form here: \n https://www.digite.com/contact-us/", 
             "data" : {
                 "elements" : null, 
@@ -260,14 +260,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582714997.5953372, 
+            "timestamp" : 1582714997.5953372,
             "name" : "action_listen", 
             "policy" : "policy_1_KerasPolicy", 
             "confidence" : 0.9998100399971008
         }, 
         {
             "event" : "user", 
-            "timestamp" : 1582715013.012148, 
+            "timestamp" : 1582715013.012148,
             "text" : "where is digite located?", 
             "parse_data" : {
                 "intent" : {
@@ -329,14 +329,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582715013.0271442, 
+            "timestamp" : 1582715013.0271442,
             "name" : "utter_location_query", 
             "policy" : "policy_1_KerasPolicy", 
             "confidence" : 0.9888001680374146
         }, 
         {
             "event" : "bot", 
-            "timestamp" : 1582715013.0271442, 
+            "timestamp" : 1582715013.0271442,
             "text" : "The Digite offices are located at: \n United States \n 21060 Homestead Rd, Suite 220, Cupertino, CA 95014 \n \n Mumbai \n Fifth Floor, Opus Park, Opposite SEEPZ Main Gate, Central MIDC Road, Andheri (East, Mumbai - 400 093 \n \n Bengaluru \n Ground Floor, 40/1A, Basappa Complex, Lavelle Road, Bengaluru-560001", 
             "data" : {
                 "elements" : null, 
@@ -352,14 +352,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582715013.0411549, 
+            "timestamp" : 1582715013.0411549,
             "name" : "action_listen", 
             "policy" : "policy_1_KerasPolicy", 
             "confidence" : 0.9998675584793091
         }, 
         {
             "event" : "user", 
-            "timestamp" : 1582715035.0665848, 
+            "timestamp" : 1582715035.0665848,
             "text" : "what is swiftkanban?", 
             "parse_data" : {
                 "intent" : {
@@ -421,14 +421,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582715035.0805962, 
+            "timestamp" : 1582715035.0805962,
             "name" : "action_default_fallback", 
             "policy" : "policy_3_FallbackPolicy", 
             "confidence" : 1.0
         }, 
         {
             "event" : "bot", 
-            "timestamp" : 1582715035.0815954, 
+            "timestamp" : 1582715035.0815954,
             "text" : "Forgive me. I could not process your message. I'm the new bot here, so I've got a long way to go. You can send in your queries to sales@digite.com or fill out the form here: \n https://www.digite.com/contact-us/", 
             "data" : {
                 "elements" : null, 
@@ -448,14 +448,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582715035.0936036, 
+            "timestamp" : 1582715035.0936036,
             "name" : "action_listen", 
             "policy" : "policy_1_KerasPolicy", 
             "confidence" : 0.9998675584793091
         }, 
         {
             "event" : "user", 
-            "timestamp" : 1582715117.4420745, 
+            "timestamp" : 1582715117.4420745,
             "text" : "Hi", 
             "parse_data" : {
                 "intent" : {
@@ -517,14 +517,14 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582715117.4600854, 
+            "timestamp" : 1582715117.4600854,
             "name" : "utter_greeting", 
             "policy" : "policy_1_KerasPolicy", 
             "confidence" : 0.9967999458312988
         }, 
         {
             "event" : "bot", 
-            "timestamp" : 1582715117.4600854, 
+            "timestamp" : 1582715117.4600854,
             "text" : "Hey! How can I help you?", 
             "data" : {
                 "elements" : null, 
@@ -540,7 +540,7 @@
         }, 
         {
             "event" : "action", 
-            "timestamp" : 1582715117.4761014, 
+            "timestamp" : 1582715117.4761014,
             "name" : "action_listen", 
             "policy" : "policy_1_KerasPolicy", 
             "confidence" : 0.9999673366546631
@@ -616,7 +616,7 @@
     "events" : [
         {
             "event" : "action", 
-            "timestamp" : 1582863184.1239572, 
+            "timestamp" : 1582863184.1239572,
             "name" : "action_listen", 
             "policy" : null, 
             "confidence" : null

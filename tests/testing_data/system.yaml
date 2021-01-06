@@ -26,3 +26,12 @@ data_generation:
   limit_per_day: ${TRAIN_LIMIT_PER_DAY:3}
   event_url: ${EVENT_URL}
   kairon_url: ${KAIRON_URL}
+
+tracker_endpoint:
+  url: ${TRACKER_URL:"mongomock://localhost/test"}
+  db: ${TRACKER_DB:"conversation"}
+  collection: ${TRACKER_COLLECTION:"conversations"}
+  token: ${TOKEN}
+
+history_server:
+  token: ${TOKEN:"b9d01861392757c66daaf1f214268e2739a5baac935071d06e2ea71a66dc5bcd"}
