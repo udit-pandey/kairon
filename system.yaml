@@ -24,3 +24,6 @@ data_generation:
   limit_per_day: ${TRAIN_LIMIT_PER_DAY:3}
   event_url: ${DATA_GENERATION_EVENT_URL}
   kairon_url: ${KAIRON_URL}
+
+history_server:
+  token: ${TOKEN}

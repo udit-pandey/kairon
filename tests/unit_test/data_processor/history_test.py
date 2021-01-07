@@ -9,6 +9,7 @@ from rasa.shared.core.domain import Domain
 
 from kairon.data_processor.history import ChatHistory
 from kairon.data_processor.processor import MongoProcessor
+from kairon.history_server.history import HistoryServerUtils, HistoryServer
 from kairon.utils import Utility
 
 
@@ -43,17 +44,17 @@ class TestHistory:
             conversations = db.get_collection("conversations")
             history, _ = self.history_conversations()
             conversations.insert_many(history)
-            return client, "conversation", "conversations", None
+            return client, "conversation", "conversations"
 
-        monkeypatch.setattr(ChatHistory, "get_mongo_connection", db_client)
+        monkeypatch.setattr(HistoryServerUtils, "get_mongo_connection", db_client)
 
     @pytest.fixture
     def mock_mongo_client_empty(self, monkeypatch):
         def client(*args, **kwargs):
             client = MongoClient()
-            return client, "conversation", "conversations", None
+            return client, "conversation", "conversations"
 
-        monkeypatch.setattr(ChatHistory, "get_mongo_connection", client)
+        monkeypatch.setattr(HistoryServerUtils, "get_mongo_connection", client)
 
     def endpoint_details(self, *args, **kwargs):
         return {"tracker_endpoint": {"url": "mongodb://localhost:27019", "db": "conversation"}}
@@ -67,11 +68,11 @@ class TestHistory:
             users = ChatHistory.fetch_chat_users(bot="tests")
             assert len(users) == 0
 
-    def test_fetch_chat_users(self, mock_mongo_client):
+    def test_fetch_chat_users(self, mock_mongo_client, mock_mongo_processor):
         users = ChatHistory.fetch_chat_users(bot="tests")
         assert len(users) == 2
 
-    def test_fetch_chat_users_empty(self, mock_mongo_client_empty):
+    def test_fetch_chat_users_empty(self, mock_mongo_client_empty, mock_mongo_processor):
         users = ChatHistory.fetch_chat_users(bot="tests")
         assert len(users) == 2
 
@@ -87,16 +88,16 @@ class TestHistory:
             assert len(history) == 0
             assert message is None
 
-    def test_fetch_chat_history_empty(self, mock_mongo_client_empty):
+    def test_fetch_chat_history_empty(self, mock_mongo_client_empty, mock_mongo_processor):
         history, message = ChatHistory.fetch_chat_history(sender="123", bot="tests")
         assert len(history) == 0
         assert message is None
 
-    def test_fetch_chat_history(self, monkeypatch):
+    def test_fetch_chat_history(self, monkeypatch, mock_mongo_processor):
         def events(*args, **kwargs):
             json_data = json.load(open("tests/testing_data/history/conversation.json"))
-            return json_data['events'], None
-        monkeypatch.setattr(ChatHistory, "fetch_user_history", events)
+            return json_data[0]['events']
+        monkeypatch.setattr(HistoryServer, "fetch_user_history", events)
 
         history, message = ChatHistory.fetch_chat_history(
             sender="5e564fbcdcf0d5fad89e3acd", bot="tests"
@@ -118,7 +119,7 @@ class TestHistory:
             assert hit_fall_back["total_count"] == 0
             assert message is None
 
-    def test_visitor_hit_fallback(self, mock_mongo_client):
+    def test_visitor_hit_fallback(self, mock_mongo_client, mock_mongo_processor):
         hit_fall_back, message = ChatHistory.visitor_hit_fallback("tests")
         assert hit_fall_back["fallback_count"] == 0
         assert hit_fall_back["total_count"] == 0
@@ -130,12 +131,12 @@ class TestHistory:
             assert not conversation_time
             assert message is None
 
-    def test_conversation_time_empty(self, mock_mongo_client_empty):
+    def test_conversation_time_empty(self, mock_mongo_client_empty, mock_mongo_processor):
         conversation_time, message = ChatHistory.conversation_time("tests")
         assert not conversation_time
         assert message is None
 
-    def test_conversation_time(self, mock_mongo_client):
+    def test_conversation_time(self, mock_mongo_client, mock_mongo_processor):
         conversation_time, message = ChatHistory.conversation_time("tests")
         assert conversation_time == []
         assert message is None
@@ -146,17 +147,17 @@ class TestHistory:
             assert not conversation_steps
             assert message is None
 
-    def test_conversation_steps_empty(self, mock_mongo_client_empty):
+    def test_conversation_steps_empty(self, mock_mongo_client_empty, mock_mongo_processor):
         conversation_steps, message = ChatHistory.conversation_steps("tests")
         assert not conversation_steps
         assert message is None
 
-    def test_conversation_steps(self, mock_mongo_client):
+    def test_conversation_steps(self, mock_mongo_client, mock_mongo_processor):
         conversation_steps, message = ChatHistory.conversation_steps("tests")
         assert conversation_steps == []
         assert message is None
 
-    def test_user_with_metrics(self, mock_mongo_client):
+    def test_user_with_metrics(self, mock_mongo_client, mock_mongo_processor):
         users, message = ChatHistory.user_with_metrics("tests")
         assert users == []
         assert message is None

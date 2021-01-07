@@ -25,7 +25,7 @@ class ChatHistory:
         """
         message = None
         endpoint = ChatHistory.get_tracker_endpoint(bot)
-        if endpoint["tracker_endpoint"]["type"] == 'rest':
+        if endpoint["tracker_endpoint"].get("type") == 'rest':
             api_endpoint = endpoint["tracker_endpoint"]["url"] + "/users/" + sender
             request = {"month": month.value}
             token = ''
@@ -51,7 +51,7 @@ class ChatHistory:
         """
         message = None
         endpoint = ChatHistory.get_tracker_endpoint(bot)
-        if endpoint["tracker_endpoint"]["type"] == 'rest':
+        if endpoint["tracker_endpoint"].get("type") == 'rest':
             api_endpoint = endpoint["tracker_endpoint"]["url"] + "/users"
             request = {"month": month.value}
             token = ''
@@ -116,7 +116,7 @@ class ChatHistory:
         :return: list of conversation events
         """
         endpoint = ChatHistory.get_tracker_endpoint(bot)
-        if endpoint["tracker_endpoint"]["type"] == 'rest':
+        if endpoint["tracker_endpoint"].get("type") == 'rest':
             api_endpoint = endpoint["tracker_endpoint"]["url"] + "/users/" + sender_id
             request = {"month": month.value}
             token = ''
@@ -142,7 +142,7 @@ class ChatHistory:
         """
         message = None
         endpoint = ChatHistory.get_tracker_endpoint(bot)
-        if endpoint["tracker_endpoint"]["type"] == 'rest':
+        if endpoint["tracker_endpoint"].get("type") == 'rest':
             api_endpoint = endpoint["tracker_endpoint"]["url"] + "/metrics/fallback"
             request = {"month": month.value}
             token = ''
@@ -171,7 +171,7 @@ class ChatHistory:
         """
         message = None
         endpoint = ChatHistory.get_tracker_endpoint(bot)
-        if endpoint["tracker_endpoint"]["type"] == 'rest':
+        if endpoint["tracker_endpoint"].get("type") == 'rest':
             api_endpoint = endpoint["tracker_endpoint"]["url"] + "/metrics/conversation/steps"
             request = {"month": month.value}
             token = ''
@@ -197,7 +197,7 @@ class ChatHistory:
         """
         message = None
         endpoint = ChatHistory.get_tracker_endpoint(bot)
-        if endpoint["tracker_endpoint"]["type"] == 'rest':
+        if endpoint["tracker_endpoint"].get("type") == 'rest':
             api_endpoint = endpoint["tracker_endpoint"]["url"] + "/metrics/conversation/time"
             request = {"month": month.value}
             token = ''
@@ -223,7 +223,7 @@ class ChatHistory:
         """
         message = None
         endpoint = ChatHistory.get_tracker_endpoint(bot)
-        if endpoint["tracker_endpoint"]["type"] == 'rest':
+        if endpoint["tracker_endpoint"].get("type") == 'rest':
             api_endpoint = endpoint["tracker_endpoint"]["url"] + "/metrics/users"
             request = {"month": month.value}
             token = ''
