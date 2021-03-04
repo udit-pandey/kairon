@@ -93,7 +93,6 @@ class KaironChannels(str, Enum):
 
 
 class ChannelClientDictionary:
-    __channel_client_holder = None
 
     def __init__(self, *args):
         if args:
@@ -102,7 +101,7 @@ class ChannelClientDictionary:
             self.__channel_client_holder = defaultdict(dict)
 
     def get(self, bot: str, channel: KaironChannels):
-        if not self.__channel_client_holder[bot] or not self.__channel_client_holder[bot][channel]:
+        if not self.__channel_client_holder[bot] or not self.__channel_client_holder[bot].get(channel):
             return {}
         return self.__channel_client_holder[bot][channel]
 
@@ -112,13 +111,13 @@ class ChannelClientDictionary:
     def remove(self, bot: str, channel: KaironChannels):
         self.__channel_client_holder[bot][channel] = {}
 
-    def is_present(self, bot: str, channel: KaironChannels, raise_exception=False):
+    def is_present(self, bot: str, channel: KaironChannels, raise_exception_if_present=False):
         exists = False
 
-        if self.__channel_client_holder[bot] and self.__channel_client_holder[bot][channel]:
+        if self.__channel_client_holder[bot] and self.__channel_client_holder[bot].get(channel):
             exists = True
 
-        if exists and raise_exception:
+        if exists and raise_exception_if_present:
             raise ChatServerException("Channel already registered!")
         return exists
 

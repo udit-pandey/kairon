@@ -56,4 +56,5 @@ class ChatRequest(ChatServerRequestInterface):
         self.text = text
 
     def validate(self):
-        pass
+        if not self.text:
+            raise ChatServerException("text is required!")

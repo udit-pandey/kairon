@@ -20,7 +20,7 @@ class ChatServerUtils:
         :return: None
         """
         ChatServerUtils.environment = ConfigLoader(
-            os.getenv("chat-config", "./chat-config.yaml")).get_config()
+            os.getenv("chat_config_file", "./chat-config.yaml")).get_config()
 
     @staticmethod
     def encode_auth_token(user):

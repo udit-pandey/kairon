@@ -27,7 +27,7 @@ def pytest_configure():
 
 @pytest.fixture(autouse=True, scope='session')
 def setup():
-    os.environ["chat-config"] = "./tests/testing_data/chat-config.yaml"
+    os.environ["chat_config_file"] = "./tests/testing_data/chat-config.yaml"
     ChatServerUtils.load_evironment()
     connect(host=ChatServerUtils.environment['database']["url"])
 
@@ -435,14 +435,14 @@ async def test_telegram_webhook(monkeypatch, mock_agent_response):
             "from": {
                 "id": 100001111,
                 "is_bot": False,
-                "first_name": "Jiayu",
-                "username": "jiayu",
+                "first_name": "kairon",
+                "username": "user",
                 "language_code": "en-US"
             },
             "chat": {
                 "id": 100001111,
-                "first_name": "Jiayu",
-                "username": "jiayu",
+                "first_name": "kairon",
+                "username": "user",
                 "type": "private"
             },
             "date": 1509641174,

@@ -6,7 +6,7 @@ from kairon.chat_server.channels.channels import KaironChannels, ChannelFactory,
 from kairon.chat_server.channels.telegram import KaironTelegramClient
 from kairon.chat_server.chat_server_utils import ChatServerUtils
 from kairon.chat_server.exceptions import ChatServerException
-from kairon.chat_server.middleware import authenticate_and_get_request, authenticate_telegram_requests
+from kairon.chat_server.middleware import RequestHandler
 from kairon.chat_server.models import ChatRequest, CreateClientRequest, ChatServerResponse
 from kairon.chat_server.processor import KaironMessageProcessor, ChannelCredentialsProcessor
 
@@ -48,7 +48,7 @@ async def ping():
 @app.route("/chat/channel", methods=["POST"])
 async def add_channel():
     try:
-        await authenticate_and_get_request(CreateClientRequest)
+        await RequestHandler.authenticate_request(class_=CreateClientRequest)
         clients.is_present(g.bot, g.request.channel, True)
         channel_client = ChannelFactory.create_client(g.request)
         ChannelCredentialsProcessor.add_credentials(g.bot, g.username, g.request.channel, g.request.credentials)
@@ -62,7 +62,7 @@ async def add_channel():
 @app.route("/chat/channel", methods=["PUT"])
 async def update_channel():
     try:
-        await authenticate_and_get_request(CreateClientRequest)
+        await RequestHandler.authenticate_request(class_=CreateClientRequest)
         channel_client = ChannelFactory.create_client(g.request)
         ChannelCredentialsProcessor.update_credentials(g.bot, g.username, g.request.channel, g.request.credentials)
         clients.put(g.bot, g.request.channel, channel_client)
@@ -75,7 +75,7 @@ async def update_channel():
 @app.route("/chat/channel/<channel>", methods=["GET"])
 async def get_channel(channel):
     try:
-        await authenticate_and_get_request()
+        await RequestHandler.authenticate_request()
         resp = ChannelCredentialsProcessor.get_credentials(g.bot, g.username, channel)
         response = ChatServerResponse(message="Credentials retrieved successfully", data=resp).get_json()
         return response, 200
@@ -86,7 +86,7 @@ async def get_channel(channel):
 @app.route("/chat/channel/all", methods=["GET"])
 async def list_channels():
     try:
-        await authenticate_and_get_request()
+        await RequestHandler.authenticate_request()
         resp = list(ChannelCredentialsProcessor.list_credentials(g.bot, g.username))
         response = ChatServerResponse(message="Credentials retrieved successfully", data=resp).get_json()
         return response, 200
@@ -97,7 +97,7 @@ async def list_channels():
 @app.route("/chat/channel/<channel>", methods=["DELETE"])
 async def delete_channel(channel):
     try:
-        await authenticate_and_get_request()
+        await RequestHandler.authenticate_request()
         ChannelCredentialsProcessor.delete_credentials(g.bot, g.username, channel)
         clients.remove(g.bot, channel)
         response = ChatServerResponse(message="Credentials removed successfully").get_json()
@@ -109,9 +109,7 @@ async def delete_channel(channel):
 @app.route("/chat", methods=["POST"])
 async def chat():
     try:
-        await authenticate_and_get_request(ChatRequest)
-        if not g.request or not g.request.text:
-            raise ChatServerException("Invalid request body!")
+        await RequestHandler.authenticate_request(class_=ChatRequest)
         resp = await KaironMessageProcessor().process_text_message(g.bot, g.request.text, g.username)
         app.logger.info("done")
         resp = ChatServerResponse(message=resp).get_json()
@@ -123,7 +121,7 @@ async def chat():
 @app.route("/telegram/<bot>/<auth_token>", methods=["POST"])
 async def telegram(bot: str, auth_token: str):
     try:
-        await authenticate_telegram_requests(auth_token)
+        await RequestHandler.authenticate_request(auth_token=auth_token)
         telegram_client: KaironTelegramClient = clients.get(bot, KaironChannels.TELEGRAM)
         telegram_client.handle_message(g.request)
         response = ChatServerResponse(message="Message sent Successfully").get_json()

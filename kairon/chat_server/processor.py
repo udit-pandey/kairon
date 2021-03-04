@@ -39,30 +39,6 @@ class KaironMessageProcessor:
         pass
 
 
-# class MongoProcessor:
-#
-#     def get_endpoints(self, bot: Text, raise_exception=True):
-#         """
-#         fetches endpoint configuration
-#
-#         :param bot: bot id
-#         :param raise_exception: wether to raise an exception, default is True
-#         :return: endpoint configuration
-#         """
-#         try:
-#             endpoint = Endpoints.objects().get(bot=bot).to_mongo().to_dict()
-#             endpoint.pop("bot")
-#             endpoint.pop("user")
-#             endpoint.pop("timestamp")
-#             endpoint["_id"] = endpoint["_id"].__str__()
-#             return endpoint
-#         except DoesNotExist as e:
-#             if raise_exception:
-#                 raise ChatServerException("Endpoint Configuration does not exists!")
-#             else:
-#                 return {}
-
-
 class AgentProcessor:
     """
     Class contains logic for loading bot agents
@@ -117,11 +93,6 @@ class AgentProcessor:
 
 
 class AuthenticationProcessor:
-
-    @staticmethod
-    def is_email_verified(email: str):
-        if not UserEmailConfirmation.objects(email__iexact=email.strip(), raise_error=False):
-            raise AuthenticationException("Please verify your mailing address")
 
     @staticmethod
     def validate_user_and_get_info(auth_token: str, alias_user: str = None):
